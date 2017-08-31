@@ -8,7 +8,7 @@ class Map extends Component{
     constructor(props){
         super(props);
         
-        
+        this.animate.bind(this);
         d3.json('https://raw.githubusercontent.com/d3/d3.github.com/master/world-110m.v1.json',(err,world)=>{
             
             let countries = topojson.feature(world,world.objects.countries);
@@ -25,7 +25,8 @@ class Map extends Component{
             d3.json('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson',(err,quakes)=>{
                quakes = quakes.features.filter(quake => quake.properties.felt !== null && quake.properties.mag > 3);
                this.setState(Object.assign({},this.state,{quakes}));   
-            })
+               this.animate();
+            });
         });
 
         
@@ -35,7 +36,7 @@ class Map extends Component{
         let self = this;
         if(!this.state || !this.state.countries || !this.state.quakes) return null;
          return(
-            <svg onClick={this.animate.bind(this)} width={this.props.width} height={this.props.height}>
+            <svg width={this.props.width} height={this.props.height}>
                  {/* <path className="graticule" d={this.state.path(this.state.graticule.outline())}></path> */}
                  <path d={this.state.path(this.state.countries)}></path> 
                 {/* {
